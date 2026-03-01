@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "stripfeed"
-version = "1.0.0"
+version = "1.0.1"
 description = "Official Python SDK for StripFeed - convert any URL to clean Markdown"
 readme = "README.md"
 license = "MIT"
@@ -13,12 +13,16 @@ authors = [{ name = "StripFeed" }]
 keywords = [
     "stripfeed",
     "markdown",
+    "url-to-markdown",
+    "html-to-markdown",
     "web-scraping",
+    "content-extraction",
     "ai",
     "llm",
     "rag",
+    "ai-agents",
+    "token-counting",
     "readability",
-    "html-to-markdown",
     "api",
     "sdk",
 ]
@@ -32,6 +36,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Typing :: Typed",
 ]
 

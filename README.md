@@ -88,5 +88,6 @@ sf = StripFeed(
 
 - [Documentation](https://www.stripfeed.dev/docs)
 - [Dashboard](https://www.stripfeed.dev/dashboard)
-- [GitHub](https://github.com/StripFeed/stripfeed-python)
 - [TypeScript SDK](https://www.npmjs.com/package/stripfeed)
+- [MCP Server](https://www.npmjs.com/package/@stripfeed/mcp-server)
+- [GitHub](https://github.com/StripFeed/stripfeed-python)

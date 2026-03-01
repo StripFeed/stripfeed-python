@@ -8,7 +8,7 @@ import urllib.parse
 import urllib.request
 from typing import Any, Dict, List, Optional, Sequence, TypedDict, Union
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __all__ = [
     "StripFeed",
     "StripFeedError",
