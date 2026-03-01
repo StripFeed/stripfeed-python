@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stripfeed"
+version = "1.0.0"
+description = "Official Python SDK for StripFeed - convert any URL to clean Markdown"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [{ name = "StripFeed" }]
+keywords = [
+    "stripfeed",
+    "markdown",
+    "web-scraping",
+    "ai",
+    "llm",
+    "rag",
+    "readability",
+    "html-to-markdown",
+    "api",
+    "sdk",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://www.stripfeed.dev"
+Documentation = "https://www.stripfeed.dev/docs"
+Repository = "https://github.com/StripFeed/stripfeed-python"
+Issues = "https://github.com/StripFeed/stripfeed-python/issues"
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[tool.setuptools.packages.find]
+include = ["stripfeed*"]

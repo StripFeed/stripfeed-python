@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]" build
+
+      - name: Run tests
+        run: pytest
+
+      - name: Build package
+        run: python -m build
+
+      - name: Check if version tag exists
+        id: check
+        run: |
+          VERSION=$(python -c "from stripfeed import __version__; print(__version__)")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          if git ls-remote --tags origin "v$VERSION" | grep -q "v$VERSION"; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish to PyPI
+        if: steps.check.outputs.exists == 'false'
+        run: pip install twine && twine upload dist/*
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: Create git tag
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          git tag "v${{ steps.check.outputs.version }}"
+          git push origin "v${{ steps.check.outputs.version }}"
+
+      - name: Create GitHub Release
+        if: steps.check.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v${{ steps.check.outputs.version }}" \
+            --title "v${{ steps.check.outputs.version }}" \
+            --generate-notes
