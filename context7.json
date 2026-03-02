@@ -1,18 +1,4 @@
 {
-  "$schema": "https://context7.com/schema/context7.json",
-  "projectTitle": "StripFeed Python SDK",
-  "description": "Official Python SDK for StripFeed. Convert any URL to clean, token-efficient Markdown for AI agents, RAG pipelines, and LLM workflows.",
-  "excludeFolders": ["tests", "dist", "*.egg-info", "__pycache__"],
-  "excludeFiles": ["CHANGELOG.md"],
-  "rules": [
-    "Install via: pip install stripfeed",
-    "Requires Python 3.9+, zero external dependencies (uses urllib)",
-    "Create client: sf = StripFeed('sf_live_your_api_key')",
-    "sf.fetch(url, **options) returns dict with markdown, tokens, metadata",
-    "sf.fetch_markdown(url, **options) returns only the Markdown string",
-    "sf.batch(urls, model=None) fetches up to 10 URLs in parallel (Pro plan)",
-    "sf.usage() checks current monthly API usage and plan limits",
-    "Options: selector, format, model, cache, ttl, max_tokens",
-    "Errors are raised as StripFeedError with status and message attributes"
-  ]
+  "url": "https://context7.com/stripfeed/stripfeed-python",
+  "public_key": "pk_AqYVSL7rnxyp0HirTek9e"
 }
