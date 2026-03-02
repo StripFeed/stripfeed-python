@@ -27,6 +27,44 @@ print(f"Tokens: {result['tokens']} (saved {result['savingsPercent']}%)")
 md = sf.fetch_markdown("https://news.ycombinator.com")
 ```
 
+## Output Formats
+
+By default, `sf.fetch()` returns Markdown. Use the `format` parameter to get structured JSON, plain text, or HTML instead:
+
+### JSON format
+
+```python
+# Get structured JSON with all metadata fields
+result = sf.fetch("https://news.ycombinator.com", format="json")
+
+print(result["markdown"])        # Clean Markdown content
+print(result["html"])            # Clean HTML content
+print(result["text"])            # Plain text (no formatting)
+print(result["title"])           # Page title
+print(result["tokens"])          # Token count of clean output
+print(result["originalTokens"])  # Token count of original HTML
+print(result["savingsPercent"])  # Percentage of tokens saved
+print(result["cached"])          # True if served from cache
+print(result["fetchMs"])         # Processing time in ms
+print(result["truncated"])       # True if max_tokens caused truncation
+```
+
+### Plain text format
+
+```python
+# Get plain text with all Markdown formatting stripped
+result = sf.fetch("https://news.ycombinator.com", format="text")
+print(result["text"])  # No headings, bold, links, etc.
+```
+
+### HTML format
+
+```python
+# Get clean HTML (after Readability extraction)
+result = sf.fetch("https://news.ycombinator.com", format="html")
+print(result["html"])  # Clean <article> HTML
+```
+
 ## With Options
 
 ```python
