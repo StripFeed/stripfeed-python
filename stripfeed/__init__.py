@@ -8,13 +8,14 @@ import urllib.parse
 import urllib.request
 from typing import Any, Dict, List, Optional, Sequence, TypedDict, Union
 
-__version__ = "1.0.1"
+__version__ = "1.1.0"
 __all__ = [
     "StripFeed",
     "StripFeedError",
     "FetchResult",
     "BatchResultItem",
     "BatchResult",
+    "UsageResult",
 ]
 
 BASE_URL = "https://www.stripfeed.dev/api/v1"
@@ -35,6 +36,7 @@ class FetchResult(TypedDict, total=False):
     fetchMs: int
     format: str
     model: Optional[str]
+    truncated: bool
     url: str
     html: Optional[str]
     text: Optional[str]
@@ -70,6 +72,16 @@ class BatchItem(TypedDict, total=False):
 
     url: str
     selector: str
+
+
+class UsageResult(TypedDict):
+    """Result from checking API usage."""
+
+    plan: str
+    usage: int
+    limit: Optional[int]
+    remaining: Optional[int]
+    resetsAt: str
 
 
 # --- Error ---
@@ -123,6 +135,7 @@ class StripFeed:
         model: Optional[str] = None,
         cache: Optional[bool] = None,
         ttl: Optional[int] = None,
+        max_tokens: Optional[int] = None,
     ) -> FetchResult:
         """Convert a single URL to clean Markdown.
 
@@ -133,6 +146,7 @@ class StripFeed:
             model: AI model ID for cost tracking (e.g. "claude-sonnet-4-6").
             cache: Set to False to bypass cache.
             ttl: Custom cache TTL in seconds (default: 3600, max: 86400).
+            max_tokens: Truncate output to fit within this token budget.
 
         Returns:
             A FetchResult dict with markdown, tokens, savings, and metadata.
@@ -149,6 +163,8 @@ class StripFeed:
             params["cache"] = "false"
         if ttl is not None:
             params["ttl"] = str(ttl)
+        if max_tokens is not None:
+            params["max_tokens"] = str(max_tokens)
 
         query = urllib.parse.urlencode(params)
         return self._request(f"{self._base_url}/fetch?{query}")
@@ -161,6 +177,7 @@ class StripFeed:
         model: Optional[str] = None,
         cache: Optional[bool] = None,
         ttl: Optional[int] = None,
+        max_tokens: Optional[int] = None,
     ) -> str:
         """Fetch a URL and return only the Markdown string.
 
@@ -170,6 +187,7 @@ class StripFeed:
             model: AI model ID for cost tracking.
             cache: Set to False to bypass cache.
             ttl: Custom cache TTL in seconds.
+            max_tokens: Truncate output to fit within this token budget.
 
         Returns:
             Clean Markdown string.
@@ -181,6 +199,7 @@ class StripFeed:
             model=model,
             cache=cache,
             ttl=ttl,
+            max_tokens=max_tokens,
         )
         return result.get("markdown", "")
 
@@ -216,6 +235,17 @@ class StripFeed:
             method="POST",
             body=body,
         )
+
+    def usage(self) -> UsageResult:
+        """Check current monthly API usage and plan limits.
+
+        Returns:
+            A UsageResult dict with plan, usage, limit, remaining, and resetsAt.
+
+        Raises:
+            StripFeedError: If the API returns an error.
+        """
+        return self._request(f"{self._base_url}/usage")
 
     def _request(
         self,

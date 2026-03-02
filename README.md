@@ -1,5 +1,8 @@
 # StripFeed Python SDK
 
+[![PyPI version](https://img.shields.io/pypi/v/stripfeed)](https://pypi.org/project/stripfeed/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Official Python SDK for [StripFeed](https://www.stripfeed.dev) - convert any URL to clean, token-efficient Markdown for AI agents, RAG pipelines, and LLM workflows.
 
 ## Install
@@ -34,6 +37,7 @@ result = sf.fetch(
     model="claude-sonnet-4-6",    # cost tracking
     cache=False,                  # bypass cache
     ttl=7200,                     # custom cache TTL
+    max_tokens=5000,              # truncate to token budget
 )
 ```
 
@@ -50,6 +54,15 @@ result = sf.batch(
 
 for item in result["results"]:
     print(f"{item['url']}: {item['tokens']} tokens")
+```
+
+## Check Usage
+
+```python
+usage = sf.usage()
+print(f"Plan: {usage['plan']}")
+print(f"Used: {usage['usage']} / {usage['limit']}")
+print(f"Remaining: {usage['remaining']}")
 ```
 
 ## Error Handling
@@ -78,6 +91,7 @@ sf = StripFeed(
 - `sf.fetch(url, **options)` - Fetch URL, return full result dict (markdown, tokens, metadata)
 - `sf.fetch_markdown(url, **options)` - Fetch URL, return only Markdown string
 - `sf.batch(urls, model=None)` - Fetch up to 10 URLs in parallel (Pro plan)
+- `sf.usage()` - Check current monthly API usage and plan limits
 
 ## Requirements
 

@@ -226,6 +226,64 @@ class TestBatch:
         assert result["results"][1]["status"] == 502
 
 
+class TestFetchMaxTokens:
+    @patch("stripfeed.urllib.request.urlopen")
+    def test_passes_max_tokens(self, mock_urlopen: MagicMock) -> None:
+        mock_urlopen.return_value = _mock_response({"markdown": "", "truncated": True})
+
+        sf = StripFeed("sf_live_test123")
+        sf.fetch("https://example.com", max_tokens=5000)
+
+        req = mock_urlopen.call_args[0][0]
+        assert "max_tokens=5000" in req.full_url
+
+    @patch("stripfeed.urllib.request.urlopen")
+    def test_truncated_in_response(self, mock_urlopen: MagicMock) -> None:
+        mock_urlopen.return_value = _mock_response(
+            {"markdown": "# Short", "truncated": True, "tokens": 3}
+        )
+
+        sf = StripFeed("sf_live_test123")
+        result = sf.fetch("https://example.com", max_tokens=5)
+        assert result["truncated"] is True
+
+
+class TestUsage:
+    @patch("stripfeed.urllib.request.urlopen")
+    def test_calls_usage_endpoint(self, mock_urlopen: MagicMock) -> None:
+        mock_urlopen.return_value = _mock_response(
+            {
+                "plan": "pro",
+                "usage": 1250,
+                "limit": 100000,
+                "remaining": 98750,
+                "resetsAt": "2026-04-01T00:00:00.000Z",
+            }
+        )
+
+        sf = StripFeed("sf_live_test123")
+        result = sf.usage()
+
+        assert result["plan"] == "pro"
+        assert result["usage"] == 1250
+        assert result["limit"] == 100000
+        assert result["remaining"] == 98750
+
+        req = mock_urlopen.call_args[0][0]
+        assert "/usage" in req.full_url
+
+    @patch("stripfeed.urllib.request.urlopen")
+    def test_raises_on_401(self, mock_urlopen: MagicMock) -> None:
+        mock_urlopen.side_effect = _mock_http_error(
+            {"error": "Invalid API key"}, 401
+        )
+
+        sf = StripFeed("sf_live_test123")
+        with pytest.raises(StripFeedError) as exc_info:
+            sf.usage()
+        assert exc_info.value.status == 401
+
+
 class TestStripFeedError:
     def test_has_correct_properties(self) -> None:
         err = StripFeedError(429, "Rate limit exceeded")

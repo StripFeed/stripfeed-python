@@ -21,7 +21,7 @@ python -m build            # Build sdist + wheel
 ## Architecture
 
 Single file (`stripfeed/__init__.py`). Exports:
-- `StripFeed` class with `fetch()`, `fetch_markdown()`, `batch()`
+- `StripFeed` class with `fetch()`, `fetch_markdown()`, `batch()`, `usage()`
 - `StripFeedError` for API errors
 - Types via TypedDict: `FetchResult`, `BatchResultItem`, `BatchResult`
 
