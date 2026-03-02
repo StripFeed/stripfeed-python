@@ -25,6 +25,12 @@ keywords = [
     "readability",
     "api",
     "sdk",
+    "anthropic",
+    "openai",
+    "chatgpt",
+    "mcp",
+    "text-extraction",
+    "web-to-markdown",
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
